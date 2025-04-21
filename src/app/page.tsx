@@ -1,10 +1,42 @@
-import React from "react";
+// Template interativo da homepage da Neurovia
 
-export default function Home() {
+'use client';
+import React from 'react';
+import { motion } from 'framer-motion';
+import Image from 'next/image';
+
+type ProjectCardProps = {
+  title: string;
+  description: string;
+};
+
+const ProjectCard: React.FC<ProjectCardProps> = ({ title, description }) => {
+  return (
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.98 }}
+      className="p-6 bg-black border border-white/10 rounded-2xl shadow-md hover:shadow-xl transition"
+    >
+      <h4 className="text-xl font-bold text-cyan-300 mb-2">{title}</h4>
+      <p className="text-sm text-gray-300">{description}</p>
+    </motion.div>
+  );
+};
+
+const Home: React.FC = () => {
   return (
     <main className="min-h-screen bg-black text-white font-sans">
-      <header className="p-6 flex justify-between items-center border-b border-white/10">
-        <h1 className="text-3xl font-bold text-cyan-400">Neurovia</h1>
+      <header className="p-6 flex justify-between items-center border-b border-white/10 sticky top-0 z-50 bg-black/80 backdrop-blur-md">
+        <div className="flex items-center gap-2">
+          <motion.div
+            className="w-10 h-10"
+            animate={{ rotate: [0, 15, -15, 0] }}
+            transition={{ repeat: Infinity, duration: 4 }}
+          >
+            <Image src="/brain-logo.svg" alt="Neurovia" width={40} height={40} />
+          </motion.div>
+          <h1 className="text-3xl font-bold text-cyan-400">Neurovia</h1>
+        </div>
         <nav className="space-x-6">
           <a href="#projetos" className="hover:text-cyan-300">Projetos</a>
           <a href="#sobre" className="hover:text-cyan-300">Sobre</a>
@@ -13,11 +45,22 @@ export default function Home() {
       </header>
 
       <section className="p-10 text-center bg-gradient-to-b from-black via-gray-900 to-gray-800">
-        <h2 className="text-4xl font-bold text-cyan-300 mb-4">Tecnologia que pensa com você.</h2>
-        <p className="text-lg max-w-2xl mx-auto">
-          A Neurovia conecta educação, saúde e sustentabilidade através da tecnologia.
-          Nossos projetos impactam vidas com inovação, formação e ação concreta.
-        </p>
+        <motion.h2 
+          className="text-4xl font-bold text-cyan-300 mb-4"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
+          Tecnologia que pensa com você.
+        </motion.h2>
+        <motion.p 
+          className="text-lg max-w-2xl mx-auto"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 1 }}
+        >
+          A Neurovia conecta educação, saúde e sustentabilidade através da tecnologia. Nossos projetos impactam vidas com inovação, formação e ação concreta.
+        </motion.p>
       </section>
 
       <section id="projetos" className="p-10 bg-gray-900">
@@ -49,13 +92,6 @@ export default function Home() {
       </footer>
     </main>
   );
-}
+};
 
-function ProjectCard({ title, description }: { title: string; description: string }) {
-  return (
-    <div className="p-6 bg-black border border-white/10 rounded-2xl shadow-md hover:shadow-xl transition">
-      <h4 className="text-xl font-bold text-cyan-300 mb-2">{title}</h4>
-      <p className="text-sm text-gray-300">{description}</p>
-    </div>
-  );
-}
+export default Home;
