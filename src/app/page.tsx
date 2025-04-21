@@ -1,9 +1,10 @@
-// Template interativo da homepage da Neurovia
+// Template interativo da homepage da Neurovia com animações e trilhas clicáveis
 
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 
 interface ProjectCardProps {
   title: string;
@@ -13,9 +14,9 @@ interface ProjectCardProps {
 const ProjectCard: React.FC<ProjectCardProps> = ({ title, description }) => {
   return (
     <motion.div
-      whileHover={{ scale: 1.05 }}
+      whileHover={{ scale: 1.05, boxShadow: '0 0 20px rgba(0,255,255,0.3)' }}
       whileTap={{ scale: 0.98 }}
-      className="p-6 bg-black border border-white/10 rounded-2xl shadow-md hover:shadow-xl transition"
+      className="p-6 bg-black border border-white/10 rounded-2xl shadow-md hover:shadow-xl transition cursor-pointer"
     >
       <h4 className="text-xl font-bold text-cyan-300 mb-2">{title}</h4>
       <p className="text-sm text-gray-300">{description}</p>
@@ -28,12 +29,8 @@ const Home: React.FC = () => {
     <main className="min-h-screen bg-black text-white font-sans">
       <header className="p-6 flex justify-between items-center border-b border-white/10 sticky top-0 z-50 bg-black/80 backdrop-blur-md">
         <div className="flex items-center gap-2">
-          <motion.div
-            className="w-10 h-10"
-            animate={{ rotate: [0, 15, -15, 0] }}
-            transition={{ repeat: Infinity, duration: 4 }}
-          >
-            <Image src="/brain-logo.svg" alt="Neurovia" width={40} height={40} />
+          <motion.div animate={{ rotate: [0, 2, -2, 0] }} transition={{ repeat: Infinity, duration: 4 }}>
+            <Image src="/brain-logo.png" alt="Neurovia Logo" width={32} height={32} />
           </motion.div>
           <h1 className="text-3xl font-bold text-cyan-400">Neurovia</h1>
         </div>
@@ -44,23 +41,62 @@ const Home: React.FC = () => {
         </nav>
       </header>
 
-      <section className="p-10 text-center bg-gradient-to-b from-black via-gray-900 to-gray-800">
-        <motion.h2 
-          className="text-4xl font-bold text-cyan-300 mb-4"
+      <section className="relative flex flex-col items-center justify-center min-h-[100vh] bg-gradient-to-b from-black via-gray-900 to-gray-800 p-10 overflow-hidden">
+        <motion.div
+          initial={{ scale: 0.9 }}
+          animate={{ scale: [0.95, 1, 0.95] }}
+          transition={{ repeat: Infinity, duration: 4 }}
+          className="z-10 relative"
+        >
+          <Image src="/brain-logo.png" alt="Cérebro Neurovia" width={240} height={240} className="rounded-lg shadow-lg" />
+        </motion.div>
+
+        <div className="absolute z-20 top-[calc(50%-120px)] w-full h-full flex flex-wrap justify-center items-center gap-8 px-6 pointer-events-none">
+          {[ 
+            { label: 'Ecobots', href: '#projetos', x: -300, y: -50 },
+            { label: 'Dispenser', href: '#projetos', x: 300, y: -50 },
+            { label: 'Jogo Web', href: '#projetos', x: -200, y: 120 },
+            { label: 'SmartHome', href: '#projetos', x: 200, y: 120 },
+            { label: 'Solar VIA', href: '#projetos', x: 0, y: 220 },
+          ].map((item, index) => (
+            <motion.div
+              key={index}
+              className="absolute bg-cyan-500 text-black font-bold text-xs rounded-full px-3 py-1 shadow-xl hover:bg-white hover:text-black cursor-pointer pointer-events-auto"
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1, x: item.x, y: item.y }}
+              transition={{ delay: 0.5 + index * 0.3 }}
+              whileHover={{ scale: 1.2 }}
+            >
+              <Link href={item.href}>{item.label}</Link>
+            </motion.div>
+          ))}
+        </div>
+
+        <motion.h2
+          className="text-4xl font-bold text-cyan-300 mt-6 mb-2 z-10 relative"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          Bem-vindo à versão 2.2 da Neurovia 🧠🚀
+          Bem-vindo a Neurovia 🧠🚀
         </motion.h2>
-        <motion.p 
-          className="text-lg max-w-2xl mx-auto"
+        <motion.p
+          className="text-lg max-w-2xl mx-auto text-center z-10 relative"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 1 }}
         >
           Esta é a nova versão interativa do nosso site! A Neurovia conecta educação, saúde e sustentabilidade através da tecnologia.
         </motion.p>
+
+        <motion.div
+          className="absolute w-full h-full top-0 left-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 0.1 }}
+          transition={{ duration: 1 }}
+        >
+          <Image src="/brain-network-bg.png" alt="Trilhas da Neurovia" fill className="object-cover" />
+        </motion.div>
       </section>
 
       <section id="projetos" className="p-10 bg-gray-900">
@@ -77,7 +113,7 @@ const Home: React.FC = () => {
       <section id="sobre" className="p-10 bg-black">
         <h3 className="text-3xl text-cyan-400 font-semibold text-center mb-6">Sobre a Neurovia</h3>
         <p className="max-w-3xl mx-auto text-center">
-          Somos uma startup brasileira fundada por uma engenheira e um gestor educacional apaixonados por mudança. Criamos tecnologias com propósito, formação e impacto social, conectando dados, pessoas e soluções para um futuro melhor.
+          Somos uma startup brasileira fundada por uma engenheira e um professor apaixonados por mudança. Criamos tecnologias com propósito, formação e impacto social, conectando dados, pessoas e soluções para um futuro melhor.
         </p>
       </section>
 
