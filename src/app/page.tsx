@@ -5,10 +5,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
 
-type ProjectCardProps = {
+interface ProjectCardProps {
   title: string;
   description: string;
-};
+}
 
 const ProjectCard: React.FC<ProjectCardProps> = ({ title, description }) => {
   return (
@@ -51,7 +51,7 @@ const Home: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
         >
-          Tecnologia que pensa com você.
+          Bem-vindo à versão 2.2 da Neurovia 🧠🚀
         </motion.h2>
         <motion.p 
           className="text-lg max-w-2xl mx-auto"
@@ -59,7 +59,7 @@ const Home: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 1 }}
         >
-          A Neurovia conecta educação, saúde e sustentabilidade através da tecnologia. Nossos projetos impactam vidas com inovação, formação e ação concreta.
+          Esta é a nova versão interativa do nosso site! A Neurovia conecta educação, saúde e sustentabilidade através da tecnologia.
         </motion.p>
       </section>
 
