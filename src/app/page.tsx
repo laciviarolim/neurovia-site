@@ -1,5 +1,3 @@
-// Template interativo da homepage da Neurovia com cérebro central e trilhas animadas para cada via
-
 'use client';
 import React from 'react';
 import { motion } from 'framer-motion';
@@ -86,4 +84,3 @@ const Home: React.FC = () => {
 };
 
 export default Home;
-
