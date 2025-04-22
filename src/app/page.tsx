@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { Brain } from 'lucide-react'; // substituto estilizado caso queira usar icones SVG externos
 
 const Home = () => {
   const [showVias, setShowVias] = useState(false);
@@ -23,7 +22,12 @@ const Home = () => {
 
   return (
     <main className="relative min-h-screen w-full bg-black text-white font-sans overflow-hidden">
-      {/* Cérebro Central (SVG estilizado com pulso) */}
+      {/* Versão do site para verificação */}
+      <h1 className="text-center text-yellow-300 text-xl font-bold mt-6 z-50 relative">
+        🧠 Última versão: SVG Realista ativada em 22/04/2025 - 20h
+      </h1>
+
+      {/* Cérebro Central (SVG animado) */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
         <motion.svg
           viewBox="0 0 200 200"
@@ -47,11 +51,11 @@ const Home = () => {
         </motion.svg>
       </div>
 
-      {/* Trilhas animadas com ícones */}
+      {/* Trilhas com ícones */}
       {showVias && vias.map((via, index) => (
         <Link href={`/vias/${via.nome}`} key={index}>
           <motion.div
-            className={\`absolute \${via.top} \${via.left || ''} \${via.right || ''} text-center cursor-pointer group z-20\`}
+            className={`absolute ${via.top} ${via.left || ''} ${via.right || ''} text-center cursor-pointer group z-20`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5 + index * 0.2, duration: 0.5 }}
@@ -68,5 +72,3 @@ const Home = () => {
 };
 
 export default Home;
-
-
