@@ -1,10 +1,10 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
 import Link from 'next/link';
+import { motion } from 'framer-motion';
+import { Brain } from 'lucide-react'; // substituto estilizado caso queira usar icones SVG externos
 
-const Home: React.FC = () => {
+const Home = () => {
   const [showVias, setShowVias] = useState(false);
 
   useEffect(() => {
@@ -13,59 +13,53 @@ const Home: React.FC = () => {
   }, []);
 
   const vias = [
-    { nome: 'educacao', cor: 'from-yellow-400 to-yellow-600', label: 'Educação', top: 'top-[10%]', left: 'left-[5%]' },
-    { nome: 'saude', cor: 'from-cyan-400 to-cyan-600', label: 'Saúde', top: 'top-[30%]', left: 'left-[2%]' },
-    { nome: 'energia', cor: 'from-purple-500 to-purple-700', label: 'Energia', top: 'top-[80%]', left: 'left-[10%]' },
-    { nome: 'automacao', cor: 'from-orange-400 to-orange-600', label: 'Automação', top: 'top-[10%]', right: 'right-[5%]' },
-    { nome: 'assistiva', cor: 'from-pink-400 to-pink-600', label: 'Assistiva', top: 'top-[30%]', right: 'right-[2%]' },
-    { nome: 'pesquisa', cor: 'from-green-400 to-green-600', label: 'P&D', top: 'top-[80%]', right: 'right-[10%]' },
+    { nome: 'educacao', label: 'Educação', icon: '📚', top: 'top-[10%]', left: 'left-[50%] -translate-x-1/2' },
+    { nome: 'saude', label: 'Saúde', icon: '🩺', top: 'top-[30%]', left: 'left-[10%]' },
+    { nome: 'energia', label: 'Energia', icon: '💡', top: 'top-[80%]', left: 'left-[20%]' },
+    { nome: 'automacao', label: 'Automação', icon: '🏠', top: 'top-[80%]', right: 'right-[20%]' },
+    { nome: 'assistiva', label: 'Assistiva', icon: '🦾', top: 'top-[30%]', right: 'right-[10%]' },
+    { nome: 'pesquisa', label: 'P&D', icon: '🔬', top: 'top-[10%]', left: 'left-[90%]' },
   ];
 
   return (
-    <main className="relative w-full h-screen bg-black text-white overflow-hidden font-sans">
-      {/* Logo ocupa 100% da tela */}
-      <Link href="/" className="absolute inset-0 z-10 flex items-center justify-center">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 2 }}
-          className="relative w-full h-full"
+    <main className="relative min-h-screen w-full bg-black text-white font-sans overflow-hidden">
+      {/* Cérebro Central (SVG estilizado com pulso) */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+        <motion.svg
+          viewBox="0 0 200 200"
+          width={300}
+          height={300}
+          initial={{ scale: 0.9 }}
+          animate={{ scale: [0.9, 1.05, 0.9] }}
+          transition={{ duration: 3, repeat: Infinity }}
+          className="text-cyan-400 fill-current"
         >
-          <motion.div
-            animate={{ scale: [1, 1.02, 1] }}
-            transition={{ repeat: Infinity, duration: 3 }}
-            className="absolute inset-0"
-          >
-            <Image
-              src="/brain-logo.png"
-              alt="Logo Cerebral da Neurovia"
-              fill
-              className="object-contain max-h-screen w-auto pointer-events-auto"
-              priority
-            />
-          </motion.div>
-        </motion.div>
-      </Link>
+          <path d="M100,30
+                   a30,30 0 1,0 0.1,0
+                   M70,30
+                   a20,20 0 1,0 0.1,0
+                   M130,30
+                   a20,20 0 1,0 0.1,0
+                   M85,100
+                   a40,40 0 1,0 30,0
+                   M70,130
+                   a15,15 0 1,0 60,0" />
+        </motion.svg>
+      </div>
 
-      {/* Trilhas aparecendo depois de 2s */}
+      {/* Trilhas animadas com ícones */}
       {showVias && vias.map((via, index) => (
         <Link href={`/vias/${via.nome}`} key={index}>
           <motion.div
-            className={`absolute ${via.top || ''} ${via.left || ''} ${via.right || ''} z-20 text-center cursor-pointer group`}
+            className={\`absolute \${via.top} \${via.left || ''} \${via.right || ''} text-center cursor-pointer group z-20\`}
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.5 + index * 0.2, duration: 0.5 }}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 1.2 }}
           >
-            <motion.div
-              whileHover={{ scale: 1.5 }}
-              whileTap={{ scale: 1.5 }}
-              className={`w-[2px] h-[70px] bg-gradient-to-b ${via.cor} mx-auto group-hover:animate-pulse`}
-            ></motion.div>
-            <div className="mt-2 text-xs text-cyan-200 group-hover:underline">
-              {via.label}
-            </div>
+            <div className="text-3xl group-hover:animate-pulse">{via.icon}</div>
+            <div className="text-xs text-cyan-200 mt-1 group-hover:underline">{via.label}</div>
           </motion.div>
         </Link>
       ))}
@@ -74,4 +68,5 @@ const Home: React.FC = () => {
 };
 
 export default Home;
+
 
