@@ -1,74 +1,62 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import React from 'react';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
-const Home = () => {
-  const [showVias, setShowVias] = useState(false);
+const vias = [
+  { nome: 'educacao', label: 'Educação', icon: '🎓', position: 'left-[10%] top-[20%]', cor: 'bg-yellow-400' },
+  { nome: 'saude', label: 'Saúde', icon: '🏥', position: 'right-[10%] top-[20%]', cor: 'bg-cyan-500' },
+  { nome: 'energia', label: 'Energia', icon: '⚡️', position: 'left-[5%] bottom-[20%]', cor: 'bg-purple-500' },
+  { nome: 'automacao', label: 'Automação', icon: '🚧', position: 'right-[5%] bottom-[20%]', cor: 'bg-orange-500' },
+  { nome: 'assistiva', label: 'Assistiva', icon: '🧠', position: 'left-[50%] top-[5%] translate-x-[-50%]', cor: 'bg-pink-500' },
+  { nome: 'pesquisa', label: 'P&D', icon: '🤖', position: 'left-[50%] bottom-[5%] translate-x-[-50%]', cor: 'bg-green-500' },
+];
 
-  useEffect(() => {
-    const timer = setTimeout(() => setShowVias(true), 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const vias = [
-    { nome: 'educacao', label: 'Educação', icon: '📚', top: 'top-[10%]', left: 'left-[50%] -translate-x-1/2' },
-    { nome: 'saude', label: 'Saúde', icon: '🩺', top: 'top-[30%]', left: 'left-[10%]' },
-    { nome: 'energia', label: 'Energia', icon: '💡', top: 'top-[80%]', left: 'left-[20%]' },
-    { nome: 'automacao', label: 'Automação', icon: '🏠', top: 'top-[80%]', right: 'right-[20%]' },
-    { nome: 'assistiva', label: 'Assistiva', icon: '🦾', top: 'top-[30%]', right: 'right-[10%]' },
-    { nome: 'pesquisa', label: 'P&D', icon: '🔬', top: 'top-[10%]', left: 'left-[90%]' },
-  ];
-
+export default function Home() {
   return (
-    <main className="relative min-h-screen w-full bg-black text-white font-sans overflow-hidden">
-      {/* Versão do site para verificação */}
-      <h1 className="text-center text-yellow-300 text-xl font-bold mt-6 z-50 relative">
-        🧠 Última versão: SVG Realista ativada em 22/04/2025 - 20h
-      </h1>
+    <main className="relative min-h-screen bg-black text-white overflow-hidden">
+      {/* Cabeçalho */}
+      <header className="p-6 flex justify-between items-center border-b border-white/10 sticky top-0 z-50 bg-black/80 backdrop-blur-md">
+        <h1 className="text-2xl font-bold text-cyan-400">Neurovia</h1>
+        <nav className="space-x-6">
+          <a href="#projetos" className="hover:text-cyan-300">Projetos</a>
+          <a href="#sobre" className="hover:text-cyan-300">Sobre</a>
+          <a href="#contato" className="hover:text-cyan-300">Contato</a>
+        </nav>
+      </header>
 
-      {/* Cérebro Central (SVG animado) */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
-        <motion.svg
-          viewBox="0 0 200 200"
-          width={300}
-          height={300}
-          initial={{ scale: 0.9 }}
-          animate={{ scale: [0.9, 1.05, 0.9] }}
+      {/* Cérebro central */}
+      <section className="relative w-full h-[100vh] flex items-center justify-center">
+        <motion.div
+          className="relative w-[300px] h-[300px] rounded-full bg-gradient-to-r from-cyan-400 to-blue-600 shadow-2xl"
+          animate={{ scale: [1, 1.1, 1] }}
           transition={{ duration: 3, repeat: Infinity }}
-          className="text-cyan-400 fill-current"
         >
-          <path d="M100,30
-                   a30,30 0 1,0 0.1,0
-                   M70,30
-                   a20,20 0 1,0 0.1,0
-                   M130,30
-                   a20,20 0 1,0 0.1,0
-                   M85,100
-                   a40,40 0 1,0 30,0
-                   M70,130
-                   a15,15 0 1,0 60,0" />
-        </motion.svg>
-      </div>
+          {/* Trilhas e ícones */}
+          {vias.map((via, index) => (
+            <Link key={index} href={`/vias/${via.nome}`}>
+              <motion.div
+                className={`absolute ${via.position} flex flex-col items-center cursor-pointer transition-transform`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 2 + index * 0.2 }}
+                whileHover={{ scale: 1.2 }}
+              >
+                <div className={`w-[2px] h-[60px] ${via.cor} animate-pulse`} />
+                <div className={`w-12 h-12 ${via.cor} rounded-full flex items-center justify-center text-xl shadow-lg mt-2`}>
+                  {via.icon}
+                </div>
+                <span className="text-xs text-gray-300 mt-1">{via.label}</span>
+              </motion.div>
+            </Link>
+          ))}
+        </motion.div>
+      </section>
 
-      {/* Trilhas com ícones */}
-      {showVias && vias.map((via, index) => (
-        <Link href={`/vias/${via.nome}`} key={index}>
-          <motion.div
-            className={`absolute ${via.top} ${via.left || ''} ${via.right || ''} text-center cursor-pointer group z-20`}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.5 + index * 0.2, duration: 0.5 }}
-            whileHover={{ scale: 1.2 }}
-            whileTap={{ scale: 1.2 }}
-          >
-            <div className="text-3xl group-hover:animate-pulse">{via.icon}</div>
-            <div className="text-xs text-cyan-200 mt-1 group-hover:underline">{via.label}</div>
-          </motion.div>
-        </Link>
-      ))}
+      {/* Rodapé */}
+      <footer className="text-center text-sm p-4 text-gray-500 bg-black">
+        &copy; {new Date().getFullYear()} Neurovia. Todos os direitos reservados.
+      </footer>
     </main>
   );
-};
-
-export default Home;
+}
