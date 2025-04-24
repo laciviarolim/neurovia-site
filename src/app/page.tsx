@@ -1,10 +1,9 @@
 'use client';
 
-import React, { Suspense } from 'react';
+import React, { Suspense, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { OrbitControls, Html, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
-import { useRef } from 'react';
 
 const Brain = () => {
   const { scene } = useGLTF('/brain-3d.glb');
@@ -15,13 +14,11 @@ const Trail = ({ from, to, color }: { from: [number, number, number]; to: [numbe
   const ref = useRef<THREE.Line>(null);
   const points = [new THREE.Vector3(...from), new THREE.Vector3(...to)];
   const geometry = new THREE.BufferGeometry().setFromPoints(points);
-
   useFrame(() => {
     if (ref.current) {
       ref.current.material.emissiveIntensity = Math.abs(Math.sin(Date.now() * 0.002)) * 1.5;
     }
   });
-
   return (
     <line ref={ref} geometry={geometry}>
       <lineBasicMaterial attach="material" color={color} linewidth={2} />
@@ -29,36 +26,23 @@ const Trail = ({ from, to, color }: { from: [number, number, number]; to: [numbe
   );
 };
 
-const ViaIcon = ({
-  position,
-  color,
-  label,
-  emoji,
-}: {
-  position: [number, number, number];
-  color: string;
-  label: string;
-  emoji: string;
-}) => {
-  return (
-    <group position={position}>
-      <mesh>
-        <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.6} />
-      </mesh>
-      <Html center>
-        <div className="text-white text-xs text-center animate-pulse">
-          <div>{emoji}</div>
-          <div>{label}</div>
-        </div>
-      </Html>
-    </group>
-  );
-};
+const ViaIcon = ({ position, color, label, emoji }: { position: [number, number, number]; color: string; label: string; emoji: string }) => (
+  <group position={position}>
+    <mesh>
+      <sphereGeometry args={[0.3, 32, 32]} />
+      <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.6} />
+    </mesh>
+    <Html center>
+      <div className="text-white text-xs text-center animate-pulse">
+        <div>{emoji}</div>
+        <div>{label}</div>
+      </div>
+    </Html>
+  </group>
+);
 
 const Scene = () => {
   const center = [0, 0, 0];
-
   const vias = [
     { position: [-4, 2.5, 0], color: 'yellow', label: 'Educação', emoji: '🎓' },
     { position: [-4.5, -1, 0], color: 'green', label: 'P&D', emoji: '🧪' },
@@ -93,3 +77,4 @@ export default function HomePage() {
     </main>
   );
 }
+
