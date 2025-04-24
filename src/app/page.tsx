@@ -1,52 +1,59 @@
+// Homepage com cérebro 3D central e vias animadas ao redor
+
 'use client';
 
-import React from 'react';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF, Html } from '@react-three/drei';
+import React, { Suspense } from 'react';
+import * as THREE from 'three';
 
-const vias = [
-  { name: 'educacao', label: 'Educação', emoji: '🎓', color: 'from-yellow-400 to-yellow-600', top: 'top-[20%]', left: 'left-[10%]' },
-  { name: 'automacao', label: 'Automação', emoji: '🤖', color: 'from-cyan-400 to-cyan-600', top: 'top-[35%]', left: 'left-[5%]' },
-  { name: 'saude', label: 'Saúde', emoji: '➕', color: 'from-red-400 to-red-600', top: 'top-[60%]', left: 'left-[15%]' },
-  { name: 'energia', label: 'Energia', emoji: '🔆', color: 'from-purple-500 to-purple-700', top: 'top-[20%]', right: 'right-[10%]' },
-  { name: 'assistiva', label: 'Assistiva', emoji: '🤝', color: 'from-pink-400 to-pink-600', top: 'top-[35%]', right: 'right-[5%]' },
-  { name: 'pesquisa', label: 'P&D', emoji: '🧪', color: 'from-green-400 to-green-600', top: 'top-[60%]', right: 'right-[15%]' },
-];
+const Brain = () => {
+  const { scene } = useGLTF('/brain-3d.glb');
+  return <primitive object={scene} scale={2.5} position={[0, 0, 0]} />;
+};
 
-export default function Home() {
+const ViaIcon = ({ position, color, label, emoji }: { position: [number, number, number], color: string, label: string, emoji: string }) => {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-black via-gray-900 to-black text-white font-sans relative overflow-hidden">
-      <section className="min-h-screen flex items-center justify-center">
-        <div className="relative w-[400px] h-[400px]">
-          <motion.div
-            className="absolute inset-0 rounded-full bg-gradient-to-br from-cyan-500 to-blue-800 shadow-2xl"
-            animate={{ scale: [1, 1.05, 1] }}
-            transition={{ duration: 6, repeat: Infinity }}
-          >
-            <div className="text-center text-4xl font-bold text-white pt-[40%] drop-shadow-md">🧠</div>
-          </motion.div>
-
-          {vias.map((via, index) => (
-            <Link key={index} href={`/vias/${via.name}`} className="absolute">
-              <motion.div
-                className={`absolute ${via.top || ''} ${via.left || ''} ${via.right || ''} text-center`}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: index * 0.3 }}
-              >
-                <div className={`w-[2px] h-[70px] bg-gradient-to-b ${via.color} mx-auto animate-pulse`}></div>
-                <div className="mt-1 text-sm text-cyan-200 hover:underline">
-                  {via.emoji} {via.label}
-                </div>
-              </motion.div>
-            </Link>
-          ))}
+    <group position={position}>
+      <mesh>
+        <sphereGeometry args={[0.3, 32, 32]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.6} />
+      </mesh>
+      <Html center>
+        <div className="text-white text-xs text-center animate-pulse">
+          <div>{emoji}</div>
+          <div>{label}</div>
         </div>
-      </section>
+      </Html>
+    </group>
+  );
+};
 
-      <footer className="text-center text-sm p-4 text-gray-400">
-        &copy; {new Date().getFullYear()} Neurovia. Todos os direitos reservados.
-      </footer>
+const Scene = () => {
+  return (
+    <Canvas camera={{ position: [0, 0, 10], fov: 45 }} className="w-full h-screen">
+      <ambientLight intensity={0.5} />
+      <pointLight position={[10, 10, 10]} />
+      <Suspense fallback={null}>
+        <Brain />
+
+        {/* Vias ao redor do cérebro em posições circulares */}
+        <ViaIcon position={[-4, 2, 0]} color="yellow" label="Educação" emoji="🎓" />
+        <ViaIcon position={[-5, -1.5, 0]} color="green" label="P&D" emoji="🧪" />
+        <ViaIcon position={[-3, -3.5, 0]} color="orange" label="Tecnologia Assistiva" emoji="🤝" />
+        <ViaIcon position={[3, -3.5, 0]} color="red" label="Saúde" emoji="➕" />
+        <ViaIcon position={[5, -1.5, 0]} color="cyan" label="Automação" emoji="🤖" />
+        <ViaIcon position={[4, 2, 0]} color="purple" label="Energia" emoji="🔆" />
+      </Suspense>
+      <OrbitControls enableZoom={true} autoRotate />
+    </Canvas>
+  );
+};
+
+export default function HomePage() {
+  return (
+    <main className="min-h-screen bg-black">
+      <Scene />
     </main>
   );
 }
