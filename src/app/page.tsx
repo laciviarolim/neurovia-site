@@ -1,18 +1,26 @@
-// Atualizado com cérebro 3D interativo e trilhas com ícones animados
-
 'use client';
 
-import { Canvas } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
 import React, { Suspense } from 'react';
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, Html, useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 const Brain = () => {
-  const { scene } = useGLTF('/brain.glb');
+  const { scene } = useGLTF('/brain-3d.glb'); // Caminho corrigido aqui
   return <primitive object={scene} scale={2.5} />;
 };
 
-const ViaIcon = ({ position, color, label, emoji }: { position: [number, number, number], color: string, label: string, emoji: string }) => {
+const ViaIcon = ({
+  position,
+  color,
+  label,
+  emoji,
+}: {
+  position: [number, number, number];
+  color: string;
+  label: string;
+  emoji: string;
+}) => {
   return (
     <group position={position}>
       <mesh>
@@ -29,8 +37,6 @@ const ViaIcon = ({ position, color, label, emoji }: { position: [number, number,
   );
 };
 
-import { Html } from '@react-three/drei';
-
 const Scene = () => {
   return (
     <Canvas camera={{ position: [0, 0, 10], fov: 45 }} className="w-full h-screen">
@@ -38,7 +44,6 @@ const Scene = () => {
       <pointLight position={[10, 10, 10]} />
       <Suspense fallback={null}>
         <Brain />
-
         {/* Vias ao redor do cérebro */}
         <ViaIcon position={[-4, 2.5, 0]} color="yellow" label="Educação" emoji="🎓" />
         <ViaIcon position={[-4.5, -1, 0]} color="green" label="P&D" emoji="🧪" />
@@ -59,3 +64,4 @@ export default function HomePage() {
     </main>
   );
 }
+
