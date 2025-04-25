@@ -1,5 +1,3 @@
-// Homepage com cérebro 3D central e vias animadas ao redor
-
 'use client';
 
 import { Canvas } from '@react-three/fiber';
@@ -7,22 +5,37 @@ import { OrbitControls, useGLTF, Html } from '@react-three/drei';
 import React, { Suspense } from 'react';
 import * as THREE from 'three';
 
+// Importa o cérebro do novo arquivo .glb
 const Brain = () => {
-  const { scene } = useGLTF('/brain-3d.glb');
-  return <primitive object={scene} scale={2.5} position={[0, 0, 0]} />;
+  const { scene } = useGLTF('/brainesse.glb');
+  scene.scale.set(1.2, 1.2, 1.2); // Ajusta a escala para maior destaque
+  return <primitive object={scene} />;
 };
 
-const ViaIcon = ({ position, color, label, emoji }: { position: [number, number, number], color: string, label: string, emoji: string }) => {
+const ViaIcon = ({
+  position,
+  color,
+  label,
+  emoji,
+}: {
+  position: [number, number, number];
+  color: string;
+  label: string;
+  emoji: string;
+}) => {
   return (
     <group position={position}>
-      <mesh>
-        <sphereGeometry args={[0.3, 32, 32]} />
-        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.6} />
+      {/* Linha */}
+      <mesh position={[0, -1.2, 0]}>
+        <cylinderGeometry args={[0.02, 0.02, 2, 32]} />
+        <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.5} />
       </mesh>
+
+      {/* Ícone */}
       <Html center>
-        <div className="text-white text-xs text-center animate-pulse">
-          <div>{emoji}</div>
-          <div>{label}</div>
+        <div className="text-white text-center text-sm">
+          <div className="text-2xl animate-pulse">{emoji}</div>
+          <div className="font-semibold drop-shadow">{label}</div>
         </div>
       </Html>
     </group>
@@ -31,21 +44,19 @@ const ViaIcon = ({ position, color, label, emoji }: { position: [number, number,
 
 const Scene = () => {
   return (
-    <Canvas camera={{ position: [0, 0, 10], fov: 45 }} className="w-full h-screen">
-      <ambientLight intensity={0.5} />
+    <Canvas camera={{ position: [0, 0, 8], fov: 50 }} className="w-full h-screen">
+      <ambientLight intensity={0.7} />
       <pointLight position={[10, 10, 10]} />
       <Suspense fallback={null}>
         <Brain />
-
-        {/* Vias ao redor do cérebro em posições circulares */}
-        <ViaIcon position={[-4, 2, 0]} color="yellow" label="Educação" emoji="🎓" />
-        <ViaIcon position={[-5, -1.5, 0]} color="green" label="P&D" emoji="🧪" />
-        <ViaIcon position={[-3, -3.5, 0]} color="orange" label="Tecnologia Assistiva" emoji="🤝" />
-        <ViaIcon position={[3, -3.5, 0]} color="red" label="Saúde" emoji="➕" />
-        <ViaIcon position={[5, -1.5, 0]} color="cyan" label="Automação" emoji="🤖" />
-        <ViaIcon position={[4, 2, 0]} color="purple" label="Energia" emoji="🔆" />
+        <ViaIcon position={[-4, 2.5, 0]} color="#FFD700" label="Educação" emoji="🎓" />
+        <ViaIcon position={[-4.5, -1.5, 0]} color="#7FFF00" label="P&D" emoji="🧪" />
+        <ViaIcon position={[-2.8, -3.2, 0]} color="#FFA500" label="Tecnologia Assistiva" emoji="🤝" />
+        <ViaIcon position={[2.8, -3.2, 0]} color="#FF6347" label="Saúde" emoji="➕" />
+        <ViaIcon position={[4.5, -1.5, 0]} color="#00CED1" label="Automação" emoji="🤖" />
+        <ViaIcon position={[4, 2.5, 0]} color="#8A2BE2" label="Energia" emoji="🔆" />
       </Suspense>
-      <OrbitControls enableZoom={true} autoRotate />
+      <OrbitControls enableZoom={false} autoRotate autoRotateSpeed={2} />
     </Canvas>
   );
 };
